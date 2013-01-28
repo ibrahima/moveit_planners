@@ -38,49 +38,49 @@
 #include <chomp_motion_planner/chomp_planner.h>
 #include <chomp_motion_planner/chomp_trajectory.h>
 #include <chomp_motion_planner/chomp_optimizer.h>
-#include <planning_models/conversions.h>
+#include <moveit/kinematic_state/conversions.h>
 
 namespace chomp {
 
-ChompPlanner::ChompPlanner(const planning_models::KinematicModelConstPtr& kmodel)
+ChompPlanner::ChompPlanner(const kinematic_model::KinematicModelConstPtr& kmodel)
 {
 }
 
 bool ChompPlanner::solve(const planning_scene::PlanningSceneConstPtr& planning_scene,
-                         const moveit_msgs::GetMotionPlan::Request &req, 
+                         const moveit_msgs::MotionPlanRequest &req, 
                          const chomp::ChompParameters& params,
-                         moveit_msgs::GetMotionPlan::Response &res) const
+                         moveit_msgs::MotionPlanResponse &res) const
 {
   ros::WallTime start_time = ros::WallTime::now();
   ChompTrajectory trajectory(planning_scene->getKinematicModel(),
                              3.0,
                              .03,
-                             req.motion_plan_request.group_name);
+                             req.group_name);
   jointStateToArray(planning_scene->getKinematicModel(),
-                    req.motion_plan_request.start_state.joint_state, 
-                    req.motion_plan_request.group_name,
+                    req.start_state.joint_state, 
+                    req.group_name,
                     trajectory.getTrajectoryPoint(0));
 
   int goal_index = trajectory.getNumPoints()- 1;
   trajectory.getTrajectoryPoint(goal_index) = trajectory.getTrajectoryPoint(0);
   sensor_msgs::JointState js;
-  for(unsigned int i = 0; i < req.motion_plan_request.goal_constraints[0].joint_constraints.size(); i++) {
-    js.name.push_back(req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name);
-    js.position.push_back(req.motion_plan_request.goal_constraints[0].joint_constraints[i].position);
-    ROS_INFO_STREAM("Setting joint " << req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name
-                    << " to position " << req.motion_plan_request.goal_constraints[0].joint_constraints[i].position);
+  for(unsigned int i = 0; i < req.goal_constraints[0].joint_constraints.size(); i++) {
+    js.name.push_back(req.goal_constraints[0].joint_constraints[i].joint_name);
+    js.position.push_back(req.goal_constraints[0].joint_constraints[i].position);
+    ROS_INFO_STREAM("Setting joint " << req.goal_constraints[0].joint_constraints[i].joint_name
+                    << " to position " << req.goal_constraints[0].joint_constraints[i].position);
   }
   jointStateToArray(planning_scene->getKinematicModel(),
                     js, 
-                    req.motion_plan_request.group_name, 
+                    req.group_name, 
                     trajectory.getTrajectoryPoint(goal_index));
-  const planning_models::KinematicModel::JointModelGroup* model_group = 
-    planning_scene->getKinematicModel()->getJointModelGroup(req.motion_plan_request.group_name);
+  const kinematic_model::JointModelGroup* model_group = 
+    planning_scene->getKinematicModel()->getJointModelGroup(req.group_name);
   // fix the goal to move the shortest angular distance for wrap-around joints:
   for (size_t i = 0; i < model_group->getJointModels().size(); i++)
   {
-    const planning_models::KinematicModel::JointModel* model = model_group->getJointModels()[i];
-    const planning_models::KinematicModel::RevoluteJointModel* revolute_joint = dynamic_cast<const planning_models::KinematicModel::RevoluteJointModel*>(model);
+    const kinematic_model::JointModel* model = model_group->getJointModels()[i];
+    const kinematic_model::RevoluteJointModel* revolute_joint = dynamic_cast<const kinematic_model::RevoluteJointModel*>(model);
 
     if (revolute_joint != NULL)
     {
@@ -98,13 +98,13 @@ bool ChompPlanner::solve(const planning_scene::PlanningSceneConstPtr& planning_s
   trajectory.fillInMinJerk();
 
   // optimize!
-  planning_models::KinematicState start_state(planning_scene->getCurrentState());
-  planning_models::robotStateToKinematicState(*planning_scene->getTransforms(), req.motion_plan_request.start_state, start_state);
+  kinematic_state::KinematicState start_state(planning_scene->getCurrentState());
+  kinematic_state::robotStateToKinematicState(*planning_scene->getTransforms(), req.start_state, start_state);
     
   ros::WallTime create_time = ros::WallTime::now();
   ChompOptimizer optimizer(&trajectory, 
                            planning_scene, 
-                           req.motion_plan_request.group_name,
+                           req.group_name,
                            &params,
                            start_state);
   if(!optimizer.isInitialized()) {
@@ -128,7 +128,7 @@ bool ChompPlanner::solve(const planning_scene::PlanningSceneConstPtr& planning_s
     res.trajectory.joint_trajectory.joint_names[i] = model_group->getJointModels()[i]->getName();
   }
 
-  res.trajectory.joint_trajectory.header = req.motion_plan_request.start_state.joint_state.header; // @TODO this is probably a hack
+  res.trajectory.joint_trajectory.header = req.start_state.joint_state.header; // @TODO this is probably a hack
 
   // fill in the entire trajectory
   res.trajectory.joint_trajectory.points.resize(trajectory.getNumPoints());

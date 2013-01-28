@@ -17,10 +17,12 @@
   <build_depend>catkin</build_depend> 
   <build_depend>moveit_ompl_planners_core</build_depend>
   <build_depend>moveit_ompl_planners_ros_plugin</build_depend>
+  <build_depend>moveit_chomp_planner</build_depend>
+  <!-- <build_depend>moveit_comp_ros_plugin</build_depend> -->
 
   <run_depend>moveit_ompl_planners_core</run_depend>
   <run_depend>moveit_ompl_planners_ros_plugin</run_depend>
-
+  <run_depend>moveit_chomp_planner</run_depend>
   <export>
     <metapackage/>
   </export>

@@ -41,10 +41,11 @@
 #include <chomp_motion_planner/chomp_trajectory.h>
 #include <chomp_motion_planner/chomp_cost.h>
 #include <chomp_motion_planner/multivariate_gaussian.h>
-#include <planning_models/kinematic_model.h>
-#include <planning_scene/planning_scene.h>
-#include <collision_distance_field/hybrid_collision_robot.h>
-#include <collision_distance_field/hybrid_collision_world.h>
+#include <moveit/kinematic_model/kinematic_model.h>
+/* #include <moveit/kinematic_state/kinematic_state.h> */
+#include <moveit/planning_scene/planning_scene.h>
+#include <moveit/collision_distance_field/hybrid_collision_robot.h>
+#include <moveit/collision_distance_field/hybrid_collision_world.h>
 
 
 #include <Eigen/Core>
@@ -61,7 +62,7 @@ public:
                  const planning_scene::PlanningSceneConstPtr& planning_scene,
                  const std::string& planning_group, 
                  const ChompParameters *parameters,
-                 const planning_models::KinematicState& start_state);
+                 const kinematic_state::KinematicState& start_state);
 
   virtual ~ChompOptimizer();
 
@@ -107,7 +108,7 @@ private:
                    std::string& jointName, 
                    Eigen::MatrixBase<Derived>& jacobian) const;
 
-  // void getRandomState(const planning_models::KinematicState& currentState, 
+  // void getRandomState(const kinematic_state::KinematicState& currentState, 
   //                     const std::string& group_name,
   //                     Eigen::VectorXd& state_vec);
 
@@ -126,14 +127,14 @@ private:
   unsigned int collision_free_iteration_;
 
   ChompTrajectory *full_trajectory_;
-  const planning_models::KinematicModelConstPtr& kmodel_;
+  const kinematic_model::KinematicModelConstPtr& kmodel_;
   std::string planning_group_;
   const ChompParameters *parameters_;
   ChompTrajectory group_trajectory_;
   planning_scene::PlanningSceneConstPtr planning_scene_;
-  planning_models::KinematicState state_;
-  planning_models::KinematicState start_state_;
-  const planning_models::KinematicModel::JointModelGroup* joint_model_group_;
+  kinematic_state::KinematicState state_;
+  kinematic_state::KinematicState start_state_;
+  const kinematic_model::JointModelGroup* joint_model_group_;
   const collision_detection::CollisionWorldHybrid* hy_world_;
   const collision_detection::CollisionRobotHybrid* hy_robot_; 
 
@@ -199,7 +200,7 @@ private:
     return (parents.find(parentLink) != parents.end() && parents.at(parentLink));
   }
 
-  void registerParents(const planning_models::KinematicModel::JointModel* model);
+  void registerParents(const kinematic_model::JointModel* model);
   void initialize();
   void calculateSmoothnessIncrements();
   void calculateCollisionIncrements();

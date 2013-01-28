@@ -1,0 +1,28 @@
+<package>
+  <name>moveit_chomp_planner</name>
+  <description>
+
+     chomp_motion_planner
+
+  </description>
+  <version>0.3.4</version>
+  <author>Gil Jones</author>
+  <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/chomp_motion_planner</url>
+
+  <buildtool_depend>catkin</buildtool_depend> 
+  <build_depend>collision_distance_field</build_depend>
+
+
+  <build_depend>moveit_core</build_depend>
+
+  <run_depend>moveit_core</run_depend>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lchomp_motion_planner"/>
+  </export>
+
+</package>
+
+
