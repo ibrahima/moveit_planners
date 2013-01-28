@@ -32,9 +32,9 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include <planning_interface/planning_interface.h>
-#include <planning_scene/planning_scene.h>
-#include <planning_models/kinematic_model.h>
+#include <moveit/planning_interface/planning_interface.h>
+#include <moveit/planning_scene/planning_scene.h>
+#include <moveit/kinematic_model/kinematic_model.h>
 #include <moveit_msgs/GetMotionPlan.h>
 #include <chomp_interface_ros/chomp_interface_ros.h>
 
@@ -48,13 +48,12 @@ namespace chomp_interface_ros
 class CHOMPPlanner : public planning_interface::Planner
 {
 public:
-  void init(const planning_models::KinematicModelConstPtr& model)
+  void init(const kinematic_model::KinematicModelConstPtr& model)
   {
     chomp_interface_.reset(new CHOMPInterfaceROS(model));
   }
 
-  bool canServiceRequest(const moveit_msgs::GetMotionPlan::Request &req,
-                         planning_interface::PlannerCapability &capabilities) const
+  bool canServiceRequest(const moveit_msgs::MotionPlanRequest &req) const
   {
     // TODO: this is a dummy implementation
     //      capabilities.dummy = false;
@@ -62,18 +61,18 @@ public:
   }
 
   bool solve(const planning_scene::PlanningSceneConstPtr& planning_scene,
-             const moveit_msgs::GetMotionPlan::Request &req, 
-             moveit_msgs::GetMotionPlan::Response &res) const
+             const moveit_msgs::MotionPlanRequest &req, 
+             moveit_msgs::MotionPlanResponse &res) const
   {
     return chomp_interface_->solve(planning_scene, req, 
                                    chomp_interface_->getParams(),res);
   }
 
   bool solve(const planning_scene::PlanningSceneConstPtr& planning_scene,
-             const moveit_msgs::GetMotionPlan::Request &req, 
+             const moveit_msgs::MotionPlanRequest &req, 
              moveit_msgs::MotionPlanDetailedResponse &res) const
   {
-    moveit_msgs::GetMotionPlan::Response res2;
+    moveit_msgs::MotionPlanResponse res2;
     if (chomp_interface_->solve(planning_scene, req, 
                                 chomp_interface_->getParams(),res2))
     {

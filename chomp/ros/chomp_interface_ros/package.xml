@@ -1,0 +1,42 @@
+<package>
+  <name>moveit_chomp_interface_ros</name>
+  <description>
+
+     chomp_interface_ros
+
+  </description>
+  <version>0.3.4</version>
+  <author>Gil Jones</author>
+  <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
+
+  <license>BSD</license>
+  <url>http://ros.org/wiki/chomp_interface_ros</url>
+
+  <buildtool_depend>catkin</buildtool_depend> 
+  <build_depend>collision_distance_field</build_depend>
+
+
+  <build_depend>moveit_chomp_planner</build_depend>
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>roscpp</build_depend>
+
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>moveit_core</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>moveit_chomp_planner</run_depend>
+
+  <!-- <depend package="planning_scene_monitor"/> -->
+  <!-- <depend package="planning_interface"/> -->
+  <!-- <depend package="pluginlib"/> -->
+
+  <export>
+    <cpp cflags="-I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lchomp_interface_ros `rosboost-cfg --lflags thread`"/>
+    <moveit_core plugin="${prefix}/plugin_description.xml"/>
+  </export>
+
+</package>
+
+

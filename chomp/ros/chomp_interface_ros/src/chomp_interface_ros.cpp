@@ -39,7 +39,7 @@
 namespace chomp_interface_ros
 {
 
-CHOMPInterfaceROS::CHOMPInterfaceROS(const planning_models::KinematicModelConstPtr& kmodel) :
+CHOMPInterfaceROS::CHOMPInterfaceROS(const kinematic_model::KinematicModelConstPtr& kmodel) :
   ChompPlanner(kmodel), nh_("~") 
 {
   loadParams();

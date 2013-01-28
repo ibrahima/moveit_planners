@@ -47,7 +47,7 @@ namespace chomp_interface_ros
 class CHOMPInterfaceROS : public chomp::ChompPlanner
 {
 public:
-  CHOMPInterfaceROS(const planning_models::KinematicModelConstPtr &kmodel);
+  CHOMPInterfaceROS(const kinematic_model::KinematicModelConstPtr &kmodel);
 
   const chomp::ChompParameters& getParams() const {
     return params_;
