@@ -103,7 +103,7 @@ private:
   boost::shared_ptr<CHOMPInterfaceROS> chomp_interface_;
 };
 
-} // ompl_interface_ros
+} // chomp_interface_ros
 
 PLUGINLIB_EXPORT_CLASS( chomp_interface_ros::CHOMPPlanner, planning_interface::Planner);
                       

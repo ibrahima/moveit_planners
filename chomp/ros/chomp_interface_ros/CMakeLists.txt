@@ -35,8 +35,10 @@ link_directories(${catkin_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME} src/chomp_interface_ros.cpp)
 
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
 set(SOURCE_FILES src/chomp_plugin.cpp)
-set(LIBRARY_NAME chomp_planner_plugin)
+set(LIBRARY_NAME moveit_chomp_planner_plugin)
 # include(CMakeDetermineSystem)
 # if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 #   rosbuild_add_library_module(${LIBRARY_NAME} ${SOURCE_FILES})
@@ -45,4 +47,4 @@ set(LIBRARY_NAME chomp_planner_plugin)
 # endif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 add_library(${LIBRARY_NAME} ${SOURCE_FILES})
 
-target_link_libraries(${LIBRARY_NAME} ${PROJECT_NAME})
+target_link_libraries(${LIBRARY_NAME} ${PROJECT_NAME} ${catkin_LIBRARIES})

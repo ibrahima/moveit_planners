@@ -38,3 +38,5 @@ add_library(${MOVEIT_LIB_NAME}
   src/chomp_optimizer.cpp
   src/chomp_planner.cpp
 )
+
+target_link_libraries(${MOVEIT_LIB_NAME} ${catkin_LIBRARIES})
