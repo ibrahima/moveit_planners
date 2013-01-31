@@ -34,7 +34,7 @@
 
   <export>
     <cpp cflags="-I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lchomp_interface_ros `rosboost-cfg --lflags thread`"/>
-    <moveit_core plugin="${prefix}/plugin_description.xml"/>
+    <moveit_core plugin="${prefix}/chomp_planner_plugin_description.xml"/>
   </export>
 
 </package>
