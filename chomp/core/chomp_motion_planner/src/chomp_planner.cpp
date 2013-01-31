@@ -151,6 +151,7 @@ bool ChompPlanner::solve(const planning_scene::PlanningSceneConstPtr& planning_s
   ROS_INFO("Serviced planning request in %f wall-seconds, trajectory duration is %f", (ros::WallTime::now() - start_time).toSec(), res.trajectory.joint_trajectory.points[goal_index].time_from_start.toSec());
   res.error_code.val = moveit_msgs::MoveItErrorCodes::SUCCESS;
   res.planning_time = ros::Duration((ros::WallTime::now() - start_time).toSec());
+  res.group_name = req.group_name;
   return true;
 }
 
